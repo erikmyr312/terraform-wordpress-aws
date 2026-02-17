@@ -147,6 +147,14 @@ resource "aws_security_group" "rds_sg" {
     Name = "rds-sg"
   }
 }
+############################################
+# Key Pair lookup (read-only)
+# This confirms the key exists before we create EC2.
+############################################
+data "aws_key_pair" "selected" {
+  key_name = var.key_pair_name
+}
+
 
 ############################################
 # DB Subnet Group (RDS placement)

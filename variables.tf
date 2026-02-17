@@ -94,17 +94,16 @@ variable "db_storage_type" {
   description = "RDS storage type"
 }
 
+
 ############################################
 # EC2 Key Pair
-# This references an existing key pair
-# already created in AWS.
+# We reference an EXISTING AWS key pair (already created in EC2).
 ############################################
 variable "key_pair_name" {
-  description = "Name of an existing EC2 key pair"
+  description = "Name of an existing EC2 key pair in AWS"
   type        = string
-  default     = "ssh-key"
+  default     = "ERIKKEY"
 }
-
 
 # variable "ami_id" {
 #   description = "Amazon Linux 2 AMI ID"
