@@ -48,6 +48,62 @@ variable "ingress_ports" {
   default     = [22, 80, 443]
 }
 
+############################################
+# RDS settings (simple defaults for the lab)
+############################################
+variable "db_name" {
+  type        = string
+  default     = "wordpress"
+  description = "Initial database name created in RDS"
+}
+
+variable "db_username" {
+  type        = string
+  default     = "admin"
+  description = "RDS master username"
+}
+
+variable "db_password" {
+  type        = string
+  default     = "adminadmin"
+  description = "RDS master password (lab only)"
+  sensitive   = true
+}
+
+variable "db_engine_version" {
+  type        = string
+  default     = "8.0"
+  description = "MySQL engine version"
+}
+
+variable "db_instance_class" {
+  type        = string
+  default     = "db.t3.micro"
+  description = "RDS instance size"
+}
+
+variable "db_allocated_storage" {
+  type        = number
+  default     = 20
+  description = "RDS storage in GB"
+}
+
+variable "db_storage_type" {
+  type        = string
+  default     = "gp2"
+  description = "RDS storage type"
+}
+
+############################################
+# EC2 Key Pair
+# This references an existing key pair
+# already created in AWS.
+############################################
+variable "key_pair_name" {
+  description = "Name of an existing EC2 key pair"
+  type        = string
+  default     = "ssh-key"
+}
 
 
 # variable "ami_id" {
