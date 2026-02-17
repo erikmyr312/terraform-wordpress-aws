@@ -109,3 +109,11 @@ variable "key_pair_name" {
 #   description = "Amazon Linux 2 AMI ID"
 #   type        = string
 # }
+############################################
+# EC2
+############################################
+variable "instance_type" {
+  description = "EC2 instance type for WordPress"
+  type        = string
+  default     = "t2.micro"
+}

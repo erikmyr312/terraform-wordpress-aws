@@ -11,6 +11,7 @@ resource "aws_vpc" "wordpress_vpc" {
   }
 }
 
+
 ############################################
 # Internet Gateway
 # Enables internet access for public subnets
@@ -155,6 +156,26 @@ data "aws_key_pair" "selected" {
   key_name = var.key_pair_name
 }
 
+############################################
+# AMI Lookup
+# We dynamically fetch the latest Amazon Linux 2 AMI for us-east-1.
+# This avoids hardcoding AMI IDs.
+############################################
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+}
+
 
 ############################################
 # DB Subnet Group (RDS placement)
@@ -202,3 +223,27 @@ resource "aws_db_instance" "mysql" {
     Name = "mysql"
   }
 }
+
+############################################
+# EC2 Instance (WordPress)
+# - Runs in PUBLIC subnet #1
+# - Uses wordpress-sg (80/443/22)
+# - Uses your existing key pair (ERIKKEY)
+# - user_data installs WordPress under /blog
+############################################
+resource "aws_instance" "wordpress_ec2" {
+  ami                    = data.aws_ami.amazon_linux_2.id
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.public[0].id
+  vpc_security_group_ids = [aws_security_group.wordpress_sg.id]
+  key_name               = data.aws_key_pair.selected.key_name
+
+  user_data = file("${path.module}/user_data.sh")
+
+  tags = {
+    Name = "wordpress-ec2"
+  }
+}
+
+
+
